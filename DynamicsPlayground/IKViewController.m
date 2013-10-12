@@ -16,6 +16,7 @@
 
 UIDynamicAnimator* _animator;
 UIGravityBehavior* _gravity;
+UICollisionBehavior* _collision;
 
 - (void)viewDidLoad
 {
@@ -26,8 +27,18 @@ UIGravityBehavior* _gravity;
     [self.view addSubview:square];
     
     _animator = [[UIDynamicAnimator alloc] initWithReferenceView:self.view];
+    //This class keeps track of the various behaviors that you add to the engine, such as gravity, and provides the overall context. When you create an instance of an animator, you pass in a reference view that the animator uses to define its coordinate system.
+    
     _gravity = [[UIGravityBehavior alloc] initWithItems:@[square]];
+    //models the behavior of gravity and exerts forces on one or more items, allowing you to model physical interactions. When you create an instance of a behavior, you associate it with a set of items — typically views. This way you can select which items are influenced by the behavior, in this case which items the gravitational forces affect.
     [_animator addBehavior:_gravity];
+    
+    _collision = [[UICollisionBehavior alloc] initWithItems:@[square]];
+    //The above code creates a collision behavior, which defines one or more boundaries with which the associated items interact.
+    _collision.translatesReferenceBoundsIntoBoundary = YES;
+    //Rather than explicitly adding boundary co-ordinates, the above code sets the translatesReferenceBoundsIntoBoundary property to YES. This causes the boundary to use the bounds of the reference view supplied to the UIDynamicAnimator.
+    [_animator addBehavior:_collision];
+    
     
 }
 
