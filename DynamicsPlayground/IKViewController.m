@@ -14,10 +14,21 @@
 
 @implementation IKViewController
 
+UIDynamicAnimator* _animator;
+UIGravityBehavior* _gravity;
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    UIView *square = [[UIView alloc] initWithFrame:CGRectMake(100, 100, 100, 100)];
+    square.backgroundColor = [UIColor grayColor];
+    [self.view addSubview:square];
+    
+    _animator = [[UIDynamicAnimator alloc] initWithReferenceView:self.view];
+    _gravity = [[UIGravityBehavior alloc] initWithItems:@[square]];
+    [_animator addBehavior:_gravity];
+    
 }
 
 - (void)didReceiveMemoryWarning
