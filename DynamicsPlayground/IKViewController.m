@@ -17,6 +17,8 @@
 UIDynamicAnimator* _animator;
 UIGravityBehavior* _gravity;
 UICollisionBehavior* _collision;
+BOOL _firstContact;
+
 
 - (void)viewDidLoad
 {
@@ -53,16 +55,43 @@ UICollisionBehavior* _collision;
     //Rather than explicitly adding boundary co-ordinates, the above code sets the translatesReferenceBoundsIntoBoundary property to YES. This causes the boundary to use the bounds of the reference view supplied to the UIDynamicAnimator.
     [_animator addBehavior:_collision];
     
-    
+    UIDynamicItemBehavior* itemBehaviour =
+    [[UIDynamicItemBehavior alloc] initWithItems:@[square]];
+    itemBehaviour.elasticity = 0.6; [_animator addBehavior:itemBehaviour];
 }
 
 
 
 
-- (void)collisionBehavior:(UICollisionBehavior *)behavior beganContactForItem:(id<UIDynamicItem>)item
-   withBoundaryIdentifier:(id<NSCopying>)identifier atPoint:(CGPoint)p {
+- (void)collisionBehavior:(UICollisionBehavior *)behavior beganContactForItem:(id<UIDynamicItem>)item withBoundaryIdentifier:(id<NSCopying>)identifier atPoint:(CGPoint)p {
     NSLog(@"Boundary contact occurred - %@", identifier);
 //This delegate method is fired off when a collision occurs and prints out a log message to the console.
+    
+    UIView* view = (UIView*)item; view.backgroundColor = [UIColor yellowColor]; [UIView animateWithDuration:0.1 animations:^{
+        view.backgroundColor = [UIColor grayColor];
+    }];
+    
+    
+    if (!_firstContact)
+    {
+        _firstContact = YES;
+        UIView* square = [[UIView alloc] initWithFrame:CGRectMake(90, 0, 100, 100)];
+        square.backgroundColor = [UIColor grayColor]; [self.view addSubview:square];
+        [_collision addItem:square]; [_gravity addItem:square];
+        
+        UIDynamicItemBehavior* itemBehaviour =
+        [[UIDynamicItemBehavior alloc] initWithItems:@[square]];
+        itemBehaviour.elasticity = 0.6; [_animator addBehavior:itemBehaviour];
+        
+        /*
+        UIAttachmentBehavior* attach = [[UIAttachmentBehavior alloc] initWithItem:view attachedToItem:square];
+        [_animator addBehavior:attach];
+         */
+        
+        }
+    
+   // The above code detects the initial contact between the barrier and the square, creates a second square and adds it to the collision and gravity behaviors. In addition, you set up an attachment behavior to create the effect of attaching a pair of objects with a virtual spring.
+        
 }
 
 
