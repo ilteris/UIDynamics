@@ -8,7 +8,7 @@
 
 #import "IKViewController.h"
 
-@interface IKViewController ()
+@interface IKViewController () <UICollisionBehaviorDelegate>
 
 @end
 
@@ -39,7 +39,7 @@ UICollisionBehavior* _collision;
     
     _collision = [[UICollisionBehavior alloc] initWithItems:@[square]];
     //The above code creates a collision behavior, which defines one or more boundaries with which the associated items interact.
-    
+    _collision.collisionDelegate = self;
     
     CGPoint rightEdge = CGPointMake(barrier.frame.origin.x + barrier.frame.size.width,
                                     barrier.frame.origin.y);
@@ -55,6 +55,16 @@ UICollisionBehavior* _collision;
     
     
 }
+
+
+
+
+- (void)collisionBehavior:(UICollisionBehavior *)behavior beganContactForItem:(id<UIDynamicItem>)item
+   withBoundaryIdentifier:(id<NSCopying>)identifier atPoint:(CGPoint)p {
+    NSLog(@"Boundary contact occurred - %@", identifier);
+//This delegate method is fired off when a collision occurs and prints out a log message to the console.
+}
+
 
 - (void)didReceiveMemoryWarning
 {
