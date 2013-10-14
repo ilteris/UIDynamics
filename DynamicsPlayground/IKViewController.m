@@ -17,6 +17,8 @@
 UIDynamicAnimator* _animator;
 UIGravityBehavior* _gravity;
 UICollisionBehavior* _collision;
+
+
 BOOL _firstContact;
 
 
